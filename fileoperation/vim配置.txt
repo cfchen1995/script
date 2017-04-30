@@ -1,0 +1,2 @@
+﻿http://geek.csdn.net/news/detail/34295
+使用vim配置：https://github.com/spf13/spf13-vim

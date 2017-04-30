@@ -1,0 +1,18 @@
+program iers_tect
+
+implicit none
+
+real(8) :: XSTA(3) = (/ 4075578.385D0, 931852.890D0, 4801570.154D0 /)
+real(8) :: XSUN(3) = (/ 137859926952.015D0, 54228127881.4350D0, 23509422341.6960D0 /)
+real(8) :: XMON(3) = (/ -179996231.920342D0, -312468450.131567D0, -169288918.592160D0 /)
+integer :: YR      = 2009
+integer :: MONTH   = 4
+integer :: DAY     = 13
+real:: FHR     = 0.00D0
+
+real(8) :: DXTIDE(3)
+call DEHANTTIDEINEL(XSTA,YR,MONTH,DAY,FHR,XSUN,XMON,DXTIDE)
+
+write(*,*) DXTIDE
+end program
+

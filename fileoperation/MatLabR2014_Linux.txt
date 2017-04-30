@@ -1,0 +1,114 @@
+Matlab_R2014b linux版 安装笔记
+首先将iso文件(只读)挂载在/mnt/tmp下
+
+  sudo mkdir -p /mnt/tmp
+  sudo mount -t iso9660 -o loop matlab_R2014b.iso  /mnt/tmp
+然后将iso中文件整体复制到另外 可读写的 本地目录/mnt/matlab下
+
+ sudo mkdir -p /mnt/matlab
+ cd /mnt/tmp
+ sudo cp -R *  /mnt/matlab
+ sudo umount /mnt/tmp
+假设破解文件 install.jar license.lic 全部在 ~/crack/ 目录下
+首先用crack中的install.jar 覆盖原生安装包的install.jar
+
+  sudo cp ~/crack/install.jar  /mnt/matlab/java/jar/install.jar
+
+  #询问是否覆盖  按y覆盖
+现在安装
+
+ cd /mnt/matlab
+ sudo  ./install
+选择 手动安装不连接互联网
+因为某些原因 最好安装在/opt下 这样即使重做系统了 拷贝出来照样能用
+
+ sudo mkdir -p /opt/MATLAB/R2014b
+选择安装路径 就是 /opt/MATLAB/R2014b
+输入key:
+
+29797-39064-48306-32452
+选择安装工具箱 可全部安装
+选择没有互联网使用文件激活
+选中crack目录下的 license.lic许可证文件
+
+暂时不要开matlab 继续替换crack目录下给出的 libmwservices.so文件
+并且对原生的 libmwservices.so改名处理 或直接删除
+注意下方第三行cp命令 最后的 点号
+
+  cd /opt/MATLAB/R2014b/bin/glnxa64
+  sudo mv libmwservices.so libmwservices.so.old
+  sudo cp  ~/crack/libmwservices.so    .
+
+  #注意libmwservices.so  网上我找到几个 其中多个无效 但是有一个有效
+  #当终端运行matlab报错如 error while loading shared libraries: libmwservices.so: ... 
+  #那么libmwservices.so是无效的
+删除之前复制的安装文件
+
+cd /mnt/
+sudo rm -r matlab
+如果想从终端启动matlab 则要加入相应路径到环境变量PATH
+
+vim .bashrc    
+#或者 vim .zshrc ( 若在用zsh)   然后加入下面一句
+PATH="$PATH:/opt/MATLAB/R2014b/bin"
+#为了用的舒服点 再加上下面一句 
+alias matlab='nohup matlab  -desktop & ' 
+#注意需要带-desktop参数  不然可能闪退
+现在可以从终端中启动matlab
+直接键入matlab 即可
+
+如果想从启动器launcher条上 或桌面图标快捷方式启动matlab
+这个比较麻烦 如果网上找到的matlab.desktop脚本的仍然不能生效的话
+用下面的方法
+
+因为 我在用Numix-Circle做图标主题 而这个图标主题中已经有matlab的图标
+所以下方脚本中我并没有设定icon路径
+
+首先 去 /usr/share/applications中随便找一个系统图标 可以拖动到桌面上
+比如Gvim 如果桌面此时出现了gvim图标 而不是"复制时出错" 那么就可以了
+然后在终端中用vim或其他文本编辑器打开gvim.desktop文件
+
+cd ~/Desktop
+mv gvim.desktop  matlab.desktop  #改名
+vim matlab.desktop
+将里面的代码全部删掉 然后写入下面的代码
+
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Matlab2014b
+Comment=Matlab:The Tool of Technical Computing  
+Exec=/opt/MATLAB/R2014b/bin/matlab  -desktop
+Icon=matlab
+Categories=Development;Matlab; 
+Name[zh_CN]=Matlab2014b
+注意Exec行的matlab执行脚本位置 也要有-desktop参数 不然闪退
+至于icon 我的图标主题自带 所以不用指定路径
+但换掉主题后图标图案可能"一片空白" 所以也可以选择用原生图标位置:
+
+ Icon=/opt/MATLAB/R2014b/toolbox/sl3d/mainpage/matlab_logo.gif
+保存然后回到桌面就已经有matlab图标了 双击开启
+并可以将图标拖动到屏幕左边的启动器launcher条上
+
+关于matlab的字体问题
+在Linux下 尤其是在AwesomeWM中 matlab的字体锯齿化显著 难看
+这主要是开源软件openjdk的问题
+稍稍解决的方法有二:
+a. 进入Matlab，打开HOME面板上的Preferences，打开Fonts设置页，
+在右边最下方的复选框 选中 Use antialising to smooth desktop fonts
+此外还可以自由选择字体 如在Fonts面板上选择(前提是已经安装了该字体)
+
+BitStream Vera Sans Mono Plain 11   %有效区分0和O以及o
+b. 经过a过程的处理 字体表现良好 但仍然有部分字体显示锯齿
+所以对默认的openjdk-使用非版权保护的丑陋字体 打补丁
+
+# Install both infinality and fontfix'ed JDK.
+sudo add-apt-repository ppa:no1wantdthisname/ppa
+sudo add-apt-repository ppa:no1wantdthisname/openjdk-fontfix
+sudo apt-get update
+sudo apt-get install fontconfig-infinality openjdk-7-jdk
+# Apply a font style that looks good.
+sudo /etc/fonts/infinality/infctl.sh setstyle linux
+# And reboot the system.
+sudo reboot
+Ubuntu14.04LTS 用的是openjdk7 所以这里安装的是对应版本7的补丁
