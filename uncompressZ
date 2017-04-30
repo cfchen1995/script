@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# 批量解压*.Z文件
+# 04/30/2017 西南交通大学
+
+for i in $(ls *.Z);
+do
+	uncompress $i;
+done
+
