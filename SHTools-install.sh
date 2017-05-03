@@ -8,8 +8,10 @@
 # 05/01/2017 西南交通大学
 #
 # 说明：
-# 熟悉清楚系统的编译环境。
 # 其依赖的函数库libblas-dev liblapack-dev libfftw3-dev在Ubuntu软件源已有。
+# Python的使用应当要调用matplotlib, numpy和pyshtools。
+
+# To get started, import the standard matplotlib library for graphics, numpy for mathematical extensions to Python, and pyshtools:
 
 # #########################################################################################
 # +++++++++++++++++++++++官方安装++++++++++++++++++++++++++++++
