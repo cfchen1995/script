@@ -13,6 +13,8 @@ plot(100*up)
 % box off
 plot(100*dr, 'r')
 % 字体设置，要在相应的对象前面设置，比如xlabel，但是刻度是全局的。
+% 图例legend和XTick和字体的设置位置没有关系，这些变量是全局的。
+% set(gca,'FontName','Times New Roman', 'FontSize',12, 'FontWeight','bold')
 set(gca,'FontName','Times New Roman','FontSize',12)
 % 坐标刻度设置，可以不使用大括号
 set(gca, 'XTick',0:200:1200);       % X坐标轴刻度数据点位置
@@ -26,7 +28,7 @@ print(gcf,'-dtiff','displacement.tiff')
 hold off
 figure
 plot(error,'k')
-set(gca,'FontName','Times New Roman','FontSize',12)     % 字体大小设置
+set(gca,'FontName','Times New Roman', 'FontSize',12)     % 字体大小设置
 set(gca, 'XTick',0:200:1200);       % X坐标轴刻度数据点位置
 set(gca,'XTickLabel',{0:2:12});     % X坐标轴刻度处显示的字符
 
